@@ -22,7 +22,8 @@ const block = {
         width: "200px",
         height: "100px"
       },
-      text: "Text"
+      text: "Text",
+      children: [],
     }
   ]
 };
