@@ -1,4 +1,7 @@
-import { Render } from "./components/Render";
+import {
+  Render,
+  Sandbox,
+ } from "./components";
 import {
   useApp,
   AppContext,
@@ -10,8 +13,9 @@ export default function App() {
     <AppContext.Provider value={{
       dispatch,
     }}>
-      <div className="bg-gray-50 w-full h-screen">
+      <div className="bg-gray-50 w-full h-screen relative">
         <Render documents={store.page.documents} />
+        <Sandbox />
       </div>
     </AppContext.Provider>
   );
