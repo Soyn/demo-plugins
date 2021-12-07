@@ -1,4 +1,4 @@
-import { React, useEffect, useRef, useContext, useState } from "react";
+import { React, useEffect, useRef, useContext, useCallback, useMemo } from "react";
 import {
   API,
 } from '../api/PluginAPI.js';
@@ -10,7 +10,6 @@ export const Sandbox = () => {
   const sandboxRef = useRef(null);
   const { state: appState, dispatch } = useContext(AppContext);
   const pluginApi = useRef(null);
-  
   useEffect(() => {
     const global = sandboxRef.current.contentWindow;
     pluginApi.current = new API({}, global);
@@ -22,7 +21,10 @@ export const Sandbox = () => {
         global.document.body.append(script);
       });
     }
-    window.addEventListener('message', (event) => {
+  }, [])
+
+  useEffect(() => {
+    const listener = (event) => {
       const { data } = event;
       try {  
         const json = JSON.parse(data);
@@ -34,23 +36,27 @@ export const Sandbox = () => {
               payload,
             });
             const msg = {
-              type: 'updateScene',
-              payload: appState.page
+              type: "updateScene",
+              payload: appState.page,
             };
-            global.postMessage(JSON.stringify(msg))
+            sandboxRef.current.contentWindow.postMessage(JSON.stringify(msg));
             break;
           }
           case 'loadScene': {
             const msg = {
-              type: 'loadScene',
-              payload: appState.page
+              type: "loadScene",
+              payload: appState.page,
             };
-            global.postMessage(JSON.stringify(msg))
+            sandboxRef.current.contentWindow.postMessage(JSON.stringify(msg));
           }
         }
       } catch(e){}
-    })
-  }, []);
+    }
+    window.addEventListener('message', listener);
+    return () => {
+      window.removeEventListener('message', listener);
+    };
+  }, [appState]);
   return (
     <div className="w-80 h-40 border border-blue-500 fixed bottom-1 left-2 border-4 bg-green-50">
       <iframe className="w-full" ref={sandboxRef} />

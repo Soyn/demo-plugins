@@ -5,22 +5,6 @@ export class API {
   constructor(state, sandboxGlobal) {
     this.state = state;
     this._global = sandboxGlobal;
-    sandboxGlobal.addEventListener('message', (event) => {
-      const { data } = event;
-      try {
-        const JSONData = JSON.parse(data);
-        const {
-          type,
-          payload,
-        } = JSONData;
-        switch (type) {
-          case 'loadScene': {
-            this.state = payload;
-            break;
-          }
-        }
-      } catch (e) { }
-    });
   }
   _messageHandler = (event, res, rej) => {
     const { data } = event;
@@ -49,7 +33,11 @@ export class API {
   async loadScene() {
     return new Promise((res, rej) => {
       window.postMessage(JSON.stringify({ type: 'loadScene' }));
-      this._global.addEventListener('message', (event) => this._messageHandler(event, res, rej))
+      const listener = (event) => {
+        this._messageHandler(event, res, rej);
+        this._global.removeEventListener('message', listener);
+      };
+      this._global.addEventListener('message', listener);
     });
   }
   async updateScene() {
@@ -59,7 +47,11 @@ export class API {
     };
     return new Promise((res, rej) => {
       window.postMessage(JSON.stringify(payload));
-      this._global.addEventListener('message', (event) => this._messageHandler(event, res, rej))
+      const listener = (event) => {
+        this._messageHandler(event, res, rej);
+        this._global.removeEventListener('message', listener);
+      };
+      this._global.addEventListener('message', listener);
     });
   }
 

@@ -30,18 +30,18 @@ const addShape = () => {
 
   const add1kCircles = createBtn();
   add1kCircles.innerHTML = 'Add 1000 Circle';
-  add1kCircles.addEventListener('click', () => {
-    App.loadScene().then(() => {
-      for (let i = 0; i < 1000; i += 1) {
-        App.addCircle({
-          style: {
+  add1kCircles.addEventListener('click', async () => {
+    await App.loadScene();
+    for (let i = 0; i < 1000; i += 1) {
+      App.addCircle({
+        style: {
           bgColor: getRandomColor(),
           width: '100px',
           height: '100px',
-        }, children: []});
-      }
-      App.updateScene();
-    });
+        }, children: []
+      });
+    }
+    await App.updateScene();
   });
 
   const addTreeNodes = createBtn();
