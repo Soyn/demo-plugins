@@ -1,4 +1,4 @@
-import { React, useEffect, useRef, useContext } from "react";
+import { React, useEffect, useRef, useContext, useState } from "react";
 import {
   API,
 } from '../api/PluginAPI.js';
@@ -29,7 +29,7 @@ export const Sandbox = () => {
     }
     window.addEventListener('message', (event) => {
       const { data } = event;
-      try {        
+      try {  
         const json = JSON.parse(data);
         const { type, payload } = json;
         if (type === 'updateScene') {
@@ -45,7 +45,7 @@ export const Sandbox = () => {
     global.postMessage(`{type: stateChanged, payload: ${JSON.stringify(appState.page)}}`);
   }, [appState]);
   return (
-    <div className="w-80 h-40 border border-blue-500 absolute bottom-1 left-2 border-2">
+    <div className="w-80 h-40 border border-blue-500 fixed bottom-1 left-2 border-4 bg-green-50">
       <iframe ref={sandboxRef} />
     </div>
   );

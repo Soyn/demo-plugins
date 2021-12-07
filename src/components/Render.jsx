@@ -22,7 +22,7 @@ const Shapes = {
 export const Render = (props) => {
   const { documents } = props;
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full flex flex-wrap justify-around">
       {documents.map((d) => {
         const { children, type, id, ...rest } = d;
         const Parent = Shapes[type];

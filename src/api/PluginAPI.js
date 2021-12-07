@@ -16,37 +16,35 @@ export class API {
         if (type === 'stateChanged') {
           this.state = payload;
         }
-      } catch(e) {
-        console.log(e);
-      }
+      } catch(e) {}
     });
   }
   loadScene() {
     window.postMessage(JSON.stringify({ type: 'load' }));
   }
   updateScene() {
+    
     const payload = {
       type: 'updateScene',
       payload: this.state,
     };
-    
     window.postMessage(JSON.stringify(payload))
   }
 
-  addBlock(style = {}) {
+  addBlock({ style, children }) {
     this.state.documents.push({
       type: 'block',
       id: nanoid(),
       style,
-      children: [],
+      children: children,
     })
   }
-  addCircle(style={}) {
+  addCircle({ style, children }) {
     this.state.documents.push({
       type: 'circle',
       id: nanoid(),
       style,
-      children: [],
+      children: children,
     })
   }
   addText(text = '', style={}) {
