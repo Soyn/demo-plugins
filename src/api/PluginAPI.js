@@ -22,7 +22,7 @@ export class API {
       } catch (e) { }
     });
   }
-  _messageHandler = (event) => {
+  _messageHandler = (event, res, rej) => {
     const { data } = event;
     try {
       const JSONData = JSON.parse(data);
@@ -33,19 +33,23 @@ export class API {
       switch (type) {
         case 'loadScene': {
           this.state = payload;
+          res();
           break;
         }
         case 'updateScene': {
           this.state = payload;
+          res();
           break;
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      rej();
+    }
   }
   async loadScene() {
     return new Promise((res, rej) => {
       window.postMessage(JSON.stringify({ type: 'loadScene' }));
-      window.addEventListener('message', this._messageHandler)
+      this._global.addEventListener('message', (event) => this._messageHandler(event, res, rej))
     });
   }
   async updateScene() {
@@ -54,7 +58,8 @@ export class API {
       payload: this.state,
     };
     return new Promise((res, rej) => {
-      window.postMessage(JSON.stringify(payload))
+      window.postMessage(JSON.stringify(payload));
+      this._global.addEventListener('message', (event) => this._messageHandler(event, res, rej))
     });
   }
 
@@ -85,5 +90,8 @@ export class API {
   }
   getDocuments() {
     return this.state.documents;
+  }
+  setDocuments(docs) {
+    this.state.documents = docs;
   }
 }

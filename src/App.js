@@ -15,8 +15,10 @@ export default function App() {
       dispatch,
       state,
     }}>
-      <div className="bg-gray-50 w-full h-screen relative">
-        <Render documents={state.page.documents} />
+      <div className="bg-gray-50 w-full h-full relative">
+        {state.page.documents.length > 0
+          ? <Render documents={state.page.documents} />
+          : <span>No Shape!</span>}
         <Sandbox />
       </div>
     </AppContext.Provider>

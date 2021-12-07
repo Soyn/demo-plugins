@@ -53,7 +53,7 @@ export const Sandbox = () => {
   }, []);
   return (
     <div className="w-80 h-40 border border-blue-500 fixed bottom-1 left-2 border-4 bg-green-50">
-      <iframe ref={sandboxRef} />
+      <iframe className="w-full" ref={sandboxRef} />
     </div>
   );
 };
