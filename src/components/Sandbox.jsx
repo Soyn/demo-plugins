@@ -1,50 +1,49 @@
-import { React, useEffect, useRef } from "react";
+import { React, useEffect, useRef, useContext } from "react";
+import {
+  API,
+} from '../api/PluginAPI.js';
+import {
+  AppContext,
+} from '../hooks/appContext';
 
-export const Sandbox = (props) => {
+export const Sandbox = () => {
   const sandboxRef = useRef(null);
+  const { state: appState, dispatch } = useContext(AppContext);
+  const pluginApi = useRef(null);
+  
   useEffect(() => {
     const global = sandboxRef.current.contentWindow;
-    console.log(global);
-    global.App = {};
-    global.App.loadScene = () => {};
-    global.App.updateScene = () => {};
+    pluginApi.current = new API({}, global);
+    global.App = pluginApi.current;
     if (global) {
-      const script = document.createElement("script");
-      script.src = 'http://127.0.0.1:5500/src/plugins/addShape.js';
-
-      // script.append(`const addShape = () => {
-      //   window.App.loadScene();
-      //   const addBlock = document.createElement('button');
-      //   addBlock.innerHTML = 'Add Block';
-      
-      //   addBlock.addEventListener('click', () => {
-      //     window.App.Scenes.add({
-      //       type: 'block',
-      //       stye: {
-      //         bgColor: '#cbe5a2'
-      //       }
-      //     });
-      //   });
-      //   const addCircle = document.createElement('button');
-      //   addCircle.innerHTML = 'Add Circle';
-      //   addCircle.addEventListener('click', () => {
-      //     window.App.Scenes.add({
-      //       type: 'circle',
-      //       stye: {
-      //         bgColor: '#cbe5a2'
-      //       }
-      //     });
-      //     window.App.updateScene();
-      //   });
-      //   const container = document.createElement('div');
-      //   container.appendChild(addBlock);
-      //   container.appendChild(addCircle);
-      //   window.document.body.append(container);
-      // }
-      // addShape();`);
-      global.document.body.append(script);
+      window.fetch('http://127.0.0.1:5500/src/plugins/addShape.js').then((res) => res.text()).then(data => {
+        const script = global.document.createElement("script");
+        script.append(data);
+        global.document.body.append(script);
+        const payload = {
+          type: 'stateChanged',
+          payload: appState.page,
+        }
+        global.postMessage(JSON.stringify(payload));
+      });
     }
+    window.addEventListener('message', (event) => {
+      const { data } = event;
+      try {        
+        const json = JSON.parse(data);
+        const { type, payload } = json;
+        if (type === 'updateScene') {
+          dispatch({
+            type: 'setPage',
+            payload,
+          });
+        }
+      } catch(e){}
+    })
   }, []);
+  useEffect(() => {
+    global.postMessage(`{type: stateChanged, payload: ${JSON.stringify(appState.page)}}`);
+  }, [appState]);
   return (
     <div className="w-80 h-40 border border-blue-500 absolute bottom-1 left-2 border-2">
       <iframe ref={sandboxRef} />

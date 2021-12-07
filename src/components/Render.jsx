@@ -12,10 +12,10 @@ const Shapes = {
   [IShapes.Block]: ({ id,  ...rest }) => (
     <Block key={id} {...rest} />
   ),
-  [IShapes.Circle]: ({ id, children, ...rest }) => (
+  [IShapes.Circle]: ({ id, ...rest }) => (
     <Circle key={id} {...rest} />
   ),
-  [IShapes.Text]: ({ id, children, ...rest }) => (
+  [IShapes.Text]: ({ id, ...rest }) => (
     <Text key={id} {...rest} />
   ),
 };

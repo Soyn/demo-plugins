@@ -1,27 +1,25 @@
+
 const addShape = () => {
-  window.App.loadScene();
+  App.loadScene();
   const addBlock = document.createElement('button');
   addBlock.innerHTML = 'Add Block';
-
-  console.log(window);
   addBlock.addEventListener('click', () => {
-    window.App.Scenes.add({
-      type: 'block',
-      stye: {
-        bgColor: '#cbe5a2'
-      }
+    App.addBlock({
+        bgColor: '#cbe5a2',
+        width: '100px',
+        height: '100px',
+        'margin-top': '0.5em',
     });
+    App.updateScene();
   });
   const addCircle = document.createElement('button');
   addCircle.innerHTML = 'Add Circle';
   addCircle.addEventListener('click', () => {
-    window.App.Scenes.add({
-      type: 'circle',
-      stye: {
-        bgColor: '#cbe5a2'
-      }
+    App.addCircle({
+        bgColor: '#cbe5a2',
+        'margin-top': '0.5em',
     });
-    window.App.updateScene();
+    App.updateScene();
   });
   const container = document.createElement('div');
   container.appendChild(addBlock);

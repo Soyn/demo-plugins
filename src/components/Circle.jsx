@@ -3,10 +3,9 @@ import { useStyle } from "../hooks/useStyle";
 
 export const Circle = (props) => {
   const style = useStyle(props.style || {});
-  const children = props;
   return (
-    <div className="w-5 h-5 rounded" style={style}>
-      {children}
+    <div className="w-10 h-10 rounded-full" style={style}>
+      {props.children}
     </div>
   );
 };

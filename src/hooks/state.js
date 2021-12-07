@@ -99,6 +99,11 @@ const pageReducer = (page, action) => {
       }
       return page;
     }
+    case 'setPage': {
+      return {
+        ...payload,
+      }
+    }
     default:
       return {
         ...page,
@@ -119,7 +124,7 @@ const docReducer = (d, action) => {
 export const useApp = () => {
   const [app, dispatch] = useReducer((state, action) => {
     return {
-      page: pageReducer(state.page),
+      page: pageReducer(state.page, action),
     }
   }, initState);
   return [
