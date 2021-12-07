@@ -20,11 +20,6 @@ export const Sandbox = () => {
         const script = global.document.createElement("script");
         script.append(data);
         global.document.body.append(script);
-        const payload = {
-          type: 'stateChanged',
-          payload: appState.page,
-        }
-        global.postMessage(JSON.stringify(payload));
       });
     }
     window.addEventListener('message', (event) => {
@@ -32,18 +27,30 @@ export const Sandbox = () => {
       try {  
         const json = JSON.parse(data);
         const { type, payload } = json;
-        if (type === 'updateScene') {
-          dispatch({
-            type: 'setPage',
-            payload,
-          });
+        switch (type) {
+          case 'updateScene': {
+            dispatch({
+              type: 'setPage',
+              payload,
+            });
+            const msg = {
+              type: 'updateScene',
+              payload: appState.page
+            };
+            global.postMessage(JSON.stringify(msg))
+            break;
+          }
+          case 'loadScene': {
+            const msg = {
+              type: 'loadScene',
+              payload: appState.page
+            };
+            global.postMessage(JSON.stringify(msg))
+          }
         }
       } catch(e){}
     })
   }, []);
-  useEffect(() => {
-    global.postMessage(`{type: stateChanged, payload: ${JSON.stringify(appState.page)}}`);
-  }, [appState]);
   return (
     <div className="w-80 h-40 border border-blue-500 fixed bottom-1 left-2 border-4 bg-green-50">
       <iframe ref={sandboxRef} />

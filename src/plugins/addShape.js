@@ -1,6 +1,5 @@
 
 const addShape = () => {
-  App.loadScene();
   function getRandomColor() {
     var letters = '0123456789ABCDEF';
     var color = '#';
@@ -11,7 +10,8 @@ const addShape = () => {
   }
   const add1kBlocks = document.createElement('button');
   add1kBlocks.innerHTML = 'Add 1000 Blocks';
-  add1kBlocks.addEventListener('click', () => {
+  add1kBlocks.addEventListener('click', async () => {
+    await App.loadScene();
     for (let i = 0; i < 1000; i += 1) {
       App.addBlock({
         children: [],
@@ -21,26 +21,28 @@ const addShape = () => {
         height: '100px',
       }});
     }
-    App.updateScene();
+    await App.updateScene();
   });
 
   const add1kCircles = document.createElement('button');
   add1kCircles.innerHTML = 'Add 1000 Circle';
   add1kCircles.addEventListener('click', () => {
-    for (let i = 0; i < 1000; i += 1) {
-      App.addCircle({
-        style: {
-        bgColor: getRandomColor(),
-        width: '100px',
-        height: '100px',
-      }, children: []});
-    }
-    App.updateScene();
+    App.loadScene().then(() => {
+      for (let i = 0; i < 1000; i += 1) {
+        App.addCircle({
+          style: {
+          bgColor: getRandomColor(),
+          width: '100px',
+          height: '100px',
+        }, children: []});
+      }
+      App.updateScene();
+    });
   });
 
   const addTreeNodes = document.createElement('button');
   addTreeNodes.innerHTML = 'Add Tree Nodes';
-  addTreeNodes.addEventListener('click', () => {
+  addTreeNodes.addEventListener('click', async () => {
     const shapes = [
       'block',
       'circle',
@@ -64,8 +66,9 @@ const addShape = () => {
       return res;
     }
     const nodes = buildTree(1, 5);
+    await App.loadScene();
     App.addBlock(nodes[0]);
-    App.updateScene();
+    await App.updateScene();
   });
   const container = document.createElement('div');
   container.appendChild(add1kBlocks);

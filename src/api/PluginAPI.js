@@ -13,22 +13,49 @@ export class API {
           type,
           payload,
         } = JSONData;
-        if (type === 'stateChanged') {
-          this.state = payload;
+        switch (type) {
+          case 'loadScene': {
+            this.state = payload;
+            break;
+          }
         }
-      } catch(e) {}
+      } catch (e) { }
     });
   }
-  loadScene() {
-    window.postMessage(JSON.stringify({ type: 'load' }));
+  _messageHandler = (event) => {
+    const { data } = event;
+    try {
+      const JSONData = JSON.parse(data);
+      const {
+        type,
+        payload,
+      } = JSONData;
+      switch (type) {
+        case 'loadScene': {
+          this.state = payload;
+          break;
+        }
+        case 'updateScene': {
+          this.state = payload;
+          break;
+        }
+      }
+    } catch (e) {}
   }
-  updateScene() {
-    
+  async loadScene() {
+    return new Promise((res, rej) => {
+      window.postMessage(JSON.stringify({ type: 'loadScene' }));
+      window.addEventListener('message', this._messageHandler)
+    });
+  }
+  async updateScene() {
     const payload = {
       type: 'updateScene',
       payload: this.state,
     };
-    window.postMessage(JSON.stringify(payload))
+    return new Promise((res, rej) => {
+      window.postMessage(JSON.stringify(payload))
+    });
   }
 
   addBlock({ style, children }) {
@@ -47,7 +74,7 @@ export class API {
       children: children,
     })
   }
-  addText(text = '', style={}) {
+  addText(text = '', style = {}) {
     this.state.documents.push({
       type: 'text',
       id: nanoid(),
