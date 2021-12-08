@@ -4,8 +4,8 @@
   <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body>
-  <div class="flex flex-col px-8 h-full justify-center">
+<body class="w-full">
+  <div class="flex flex-col px-1 w-80 h-40 border border-blue-500 fixed bottom-1 left-2 border-4 bg-blue-50">
     <button
       class="add1kBlocks shadow-md border rounded-lg my-1 bg-white hover:bg-black hover:text-white hover:shadow-none">Add
       1000
@@ -18,14 +18,6 @@
       class="clear shadow-md border rounded-lg my-1 bg-white hover:bg-black hover:text-white hover:shadow-none hover:bg-blue-600">Clear</button>
   </div>
   <script>
-    function getRandomColor() {
-      var letters = '0123456789ABCDEF';
-      var color = '#';
-      for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    }
     var plugin = () => {
       const add1kBlocks = document.querySelector('.add1kBlocks');
       const add1kCircles = document.querySelector('.add1kCircles');
@@ -34,13 +26,13 @@
 
       add1kBlocks.addEventListener('click', () => {
         const msg = {
-          type: 'addBlock',
+          type: 'add1kBlock',
         }
         parent.postMessage(JSON.stringify(msg), '*');
       });
       add1kCircles.addEventListener('click', () => {
         const msg = {
-          type: 'addCircle',
+          type: 'add1kCircle',
         }
         parent.postMessage(JSON.stringify(msg), '*');
       });

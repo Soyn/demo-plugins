@@ -1,6 +1,13 @@
 class VM {
   constructor(realm) {
     this._realm = realm;
+    const safeLogWrapper = realm.evaluate(`(log) => {
+      return (msg) => {
+        log(msg)
+      }
+    }`)
+    const safeLog = safeLogWrapper(console.log);
+    realm.global.log = safeLog
     const wrapper = `(() => ({
       safeFunctionWrapper: (outerRealmUnsafeFunction, functionName) => {
         // This function is safe because it is created here inside the realm.        
@@ -38,7 +45,7 @@ class VM {
   getArray() {
     return this.emptyArray();
   }
-  createFunction(fnName, fn) {
+  createFunction(fn, fnName) {
     this.functionCreator(fn, fnName);
   }
   createObject(obj) {
@@ -61,6 +68,9 @@ class VM {
       }
       return res;
     }, this.emptyObject);
+  }
+  evaluate(code, args) {
+    return this._realm.evaluate(code, args);
   }
 }
 

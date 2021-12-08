@@ -7,32 +7,57 @@ import {
 class UI {
   constructor(vm) {
     this._vm = vm;
-    this._iframe = document.createElement('iframe');
-    this._document = this._iframe.contentDocument;
-    this._global = this._iframe.contentWindow;
+    const frameBox = document.createElement('iframe');
+    document.body.append(frameBox);
+    frameBox.contentWindow.parent.document.body.append(frameBox);
+
+    this._uiFrame = frameBox;
+    this._document = frameBox.contentDocument;
+    this._global = frameBox.contentWindow;
     this._listeners = this._vm.getArray();
-    this.onMessage = this._vm.createFunction(() => { });
+    this.onMessage = () => { };
   }
-  showUI(html) {
+  showUI(html, layout = {}) {
+    const {
+      position,
+      left,
+      right,
+      top,
+      bottom,
+      width,
+      height,
+    } = layout;
+    if (Object.keys(layout).length) {
+      let style = this._uiFrame.style;
+      if (position) style.position = position;
+      if (left) style.left = left;
+      if (right) style.right = right;
+      if (top) style.top = top;
+      if (bottom) style.bottom = bottom;
+      if (width) style.width = width;
+      if (height) style.height = height;
+    }
     this._global.open();
     this._document.write(html);
     this._global.close();
-    document.append(uiIframe);
-    this._global.addEventListener('message', (e) => this.onMessage(e.data));
-  }
-  get onMessage() {
-    return this.onMessage;
+    this._messageHandler = () => {};
+    this._document.addEventListener('message', (e) => this._messageHandler(e.data));
   }
   set onMessage(fn) {
-    // @TODO: make fn works
-    // this.onMessage = this._vm.createFunction(fn);
+    this._global.parent.document.removeEventListener('message', this._messageHandler);
+    this._messageHandler = this._vm.createFunction(fn);
+    this._global.parent.document.addEventListener('message', this._messageHandler);
   }
 }
 export class API {
-  constructor(state) {
+  constructor(state, syncState) {
     this._vm = createVM();
     this.state = this._vm.createObject(state);
     this._ui = new UI(this._vm);
+    this._syncState = syncState;
+  }
+  get vm()  {
+    return this._vm
   }
   get UI() {
     return this._ui;
@@ -64,5 +89,8 @@ export class API {
   }
   setDocuments(docs) {
     this.state.documents = docs;
+  }
+  closePlugin() {
+    this._syncState(this.state);
   }
 }
