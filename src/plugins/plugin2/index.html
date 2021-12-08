@@ -1,0 +1,64 @@
+<html>
+
+<head>
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="flex flex-col px-8 h-full justify-center">
+    <button
+      class="add1kBlocks shadow-md border rounded-lg my-1 bg-white hover:bg-black hover:text-white hover:shadow-none">Add
+      1000
+      Blocks</button><button
+      class="add1kCircles shadow-md border rounded-lg my-1 bg-white hover:bg-black hover:text-white hover:shadow-none">Add
+      1000
+      Circle</button><button
+      class="addTreeNodes shadow-md border rounded-lg my-1 bg-white hover:bg-black hover:text-white hover:shadow-none hover:bg-red-600">Add
+      Tree Nodes</button><button
+      class="clear shadow-md border rounded-lg my-1 bg-white hover:bg-black hover:text-white hover:shadow-none hover:bg-blue-600">Clear</button>
+  </div>
+  <script>
+    function getRandomColor() {
+      var letters = '0123456789ABCDEF';
+      var color = '#';
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+    var plugin = () => {
+      const add1kBlocks = document.querySelector('.add1kBlocks');
+      const add1kCircles = document.querySelector('.add1kCircles');
+      const addTreeNodes = document.querySelector('.addTreeNodes');
+      const clear = document.querySelector('.clear');
+
+      add1kBlocks.addEventListener('click', () => {
+        const msg = {
+          type: 'addBlock',
+        }
+        parent.postMessage(JSON.stringify(msg), '*');
+      });
+      add1kCircles.addEventListener('click', () => {
+        const msg = {
+          type: 'addCircle',
+        }
+        parent.postMessage(JSON.stringify(msg), '*');
+      });
+      addTreeNodes.addEventListener('click', () => {
+        const msg = {
+          type: 'addTreeNodes',
+        }
+        parent.postMessage(JSON.stringify(msg), '*');
+      });
+      clear.addEventListener('click', () => {
+        const msg = {
+          type: 'clear',
+        }
+        parent.postMessage(JSON.stringify(msg), '*');
+      });
+    }
+
+  </script>
+</body>
+
+</html>
