@@ -49,6 +49,10 @@ API.UI.onMessage = (event) => {
       const buildTree = (nodesCount, level) => {
         if (level <= 0) return [];
         let res = []
+        const shapes = [
+          'block',
+          'circle',
+        ];
         const indentX = nodesCount * 2;
         const w = level * 100;
         const h = level * 100;
@@ -77,5 +81,6 @@ API.UI.onMessage = (event) => {
       break;
     }
   }
+  log(API.contructor);
   API.closePlugin();
 }
