@@ -32,7 +32,7 @@ export class API {
   }
   async loadScene() {
     return new Promise((res, rej) => {
-      window.postMessage(JSON.stringify({ type: 'loadScene' }));
+      this._global.parent.postMessage(JSON.stringify({ type: 'loadScene' }));
       const listener = (event) => {
         this._messageHandler(event, res, rej);
         this._global.removeEventListener('message', listener);
@@ -46,7 +46,7 @@ export class API {
       payload: this.state,
     };
     return new Promise((res, rej) => {
-      window.postMessage(JSON.stringify(payload));
+      this._global.parent.postMessage(JSON.stringify(payload));
       const listener = (event) => {
         this._messageHandler(event, res, rej);
         this._global.removeEventListener('message', listener);
