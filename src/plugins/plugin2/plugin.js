@@ -17,7 +17,10 @@ API.UI.onMessage = (event) => {
   const { 
     data
   } = event;
-  switch(data.type) {
+  const {
+    type,
+  } = JSON.parse(data);
+  switch(type) {
     case 'add1kBlock': {
       for(let i = 0; i < 1000; i += 1) {
         API.addBlock({
@@ -31,13 +34,15 @@ API.UI.onMessage = (event) => {
       break;
     }
     case 'add1kCircle': {
-      API.addCircle({
-        children: [],
-        style: {
-        bgColor: getRandomColor(),
-        width: '100px',
-        height: '100px',
-      }});
+      for(let i = 0; i < 1000; i += 1) {
+        API.addCircle({
+          children: [],
+          style: {
+          bgColor: getRandomColor(),
+          width: '100px',
+          height: '100px',
+        }});
+      }
       break;
     }
     case 'addTreeNodes': {
@@ -68,8 +73,9 @@ API.UI.onMessage = (event) => {
       break;
     }
     case 'clear': {
-      Api.setDocuments([]);
+      API.setDocuments([]);
       break;
     }
   }
+  API.closePlugin();
 }

@@ -18,7 +18,7 @@ export const Sandbox = () => {
     const s = document.createElement("script");
     s.src = "http://127.0.0.1:5500/src/plugins/plugin2/lib/realms-shim.umd.js";
     s.onload = async () => {
-      const api = new API(state, syncPage);
+      const api = new API(state.page, syncPage);
       const getMainFestInfo = async (url) => {
         return fetch(url).then(res => res.json()).then(d => d);
       };

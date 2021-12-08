@@ -48,6 +48,12 @@ class VM {
   createFunction(fn, fnName) {
     this.functionCreator(fn, fnName);
   }
+  createArray(arr) {
+    return arr.reduce((res, element) => {
+      res.push(this.createObject(element))
+      return res;
+    }, this.getArray());
+  }
   createObject(obj) {
     return Object.keys(obj).reduce((res, prop) => {
       const value = obj[prop];
@@ -57,17 +63,17 @@ class VM {
       if (typeof value === 'string') {
         res[prop] = this.getString(value);
       }
-      if (typeof value === 'array') {
-        res[prop] = this.createObject(value, this.emptyArray);
+      if (Array.isArray(value)) {
+        res[prop] = this.createArray(value);
       }
-      if (typeof value === 'object') {
-        res[prop] = this.createObject(value, this.emptyObject);
+      if (typeof value === 'object' && !Array.isArray(value)) {
+        res[prop] = this.createObject(value);
       }
       if (typeof value === 'function') {
-        res[prop] = this.createFunction(value.name, value);
+        res[prop] = this.createFunction(value.name);
       }
       return res;
-    }, this.emptyObject);
+    }, this.emptyObject());
   }
   evaluate(code, args) {
     return this._realm.evaluate(code, args);

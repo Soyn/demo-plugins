@@ -44,9 +44,9 @@ class UI {
     this._document.addEventListener('message', (e) => this._messageHandler(e.data));
   }
   set onMessage(fn) {
-    this._global.parent.document.removeEventListener('message', this._messageHandler);
+    this._global.parent.removeEventListener('message', this._messageHandler);
     this._messageHandler = this._vm.createFunction(fn);
-    this._global.parent.document.addEventListener('message', this._messageHandler);
+    this._global.parent.addEventListener('message', fn);
   }
 }
 export class API {
