@@ -1,10 +1,7 @@
-import {
-  nanoid,
-} from 'nanoid';
-export class API {
-  constructor(state, sandboxGlobal) {
+class API {
+  constructor(state) {
     this.state = state;
-    this._global = sandboxGlobal;
+    this._global = window;
   }
   _messageHandler = (event, res, rej) => {
     const { data } = event;
@@ -30,9 +27,9 @@ export class API {
       rej();
     }
   }
-  async loadScene() {
+  loadScene() {
     return new Promise((res, rej) => {
-      this._global.parent.postMessage(JSON.stringify({ type: 'loadScene' }));
+      this._global.parent.postMessage(JSON.stringify({ type: 'loadScene' }), "http://localhost:3000");
       const listener = (event) => {
         this._messageHandler(event, res, rej);
         this._global.removeEventListener('message', listener);
@@ -40,13 +37,13 @@ export class API {
       this._global.addEventListener('message', listener);
     });
   }
-  async updateScene() {
+  updateScene() {
     const payload = {
       type: 'updateScene',
       payload: this.state,
     };
     return new Promise((res, rej) => {
-      this._global.parent.postMessage(JSON.stringify(payload));
+      this._global.parent.postMessage(JSON.stringify(payload), "http://localhost:3000");
       const listener = (event) => {
         this._messageHandler(event, res, rej);
         this._global.removeEventListener('message', listener);
@@ -58,7 +55,7 @@ export class API {
   addBlock({ style, children }) {
     this.state.documents.push({
       type: 'block',
-      id: nanoid(),
+      id: `test-${Math.random()*10}`,
       style,
       children: children,
     })
@@ -66,7 +63,7 @@ export class API {
   addCircle({ style, children }) {
     this.state.documents.push({
       type: 'circle',
-      id: nanoid(),
+      id: `test-${Math.random()*10}`,
       style,
       children: children,
     })
@@ -74,7 +71,7 @@ export class API {
   addText(text = '', style = {}) {
     this.state.documents.push({
       type: 'text',
-      id: nanoid(),
+      id: `test-${Math.random()*10}`,
       style,
       text,
       children: [],
@@ -87,3 +84,4 @@ export class API {
     this.state.documents = docs;
   }
 }
+window.App = new API();

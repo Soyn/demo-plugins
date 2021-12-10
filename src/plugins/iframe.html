@@ -1,0 +1,114 @@
+<html>
+
+<head>
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <script src="http://127.0.0.1:5501/src/api/PluginAPI.js"></script>
+</head>
+
+<body class="w-full">
+  <div
+    class="flex flex-col justify-center px-1 w-80 h-40 border border-blue-500 fixed bottom-1 left-2 border-4 bg-blue-50">
+    <button
+      class="add1kBlocks shadow-md border rounded-lg my-1 bg-white hover:bg-black hover:text-white hover:shadow-none">Add
+      1000
+      Blocks</button><button
+      class="add1kCircles shadow-md border rounded-lg my-1 bg-white hover:bg-black hover:text-white hover:shadow-none">Add
+      1000
+      Circle</button><button
+      class="addTreeNodes shadow-md border rounded-lg my-1 bg-white hover:bg-black hover:text-white hover:shadow-none hover:bg-red-600">Add
+      Tree Nodes</button><button
+      class="clear shadow-md border rounded-lg my-1 bg-white hover:bg-black hover:text-white hover:shadow-none hover:bg-blue-600">Clear</button>
+  </div>
+  <script>
+    const addShape = () => {
+      function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      }
+      const createBtn = () => {
+        const btn = document.createElement('button');
+        btn.className = 'shadow-md border rounded-lg my-1 bg-white hover:bg-black hover:text-white hover:shadow-none';
+        return btn;
+      }
+      const add1kBlocks = document.querySelector('.add1kBlocks');
+      add1kBlocks.addEventListener('click', async () => {
+        await App.loadScene();
+        for (let i = 0; i < 1000; i += 1) {
+          App.addBlock({
+            children: [],
+            style: {
+              bgColor: getRandomColor(),
+              width: '100px',
+              height: '100px',
+            }
+          });
+        }
+        await App.updateScene();
+      });
+
+      const add1kCircles = document.querySelector('.add1kCircles');
+      add1kCircles.addEventListener('click', async () => {
+        await App.loadScene();
+        for (let i = 0; i < 1000; i += 1) {
+          App.addCircle({
+            style: {
+              bgColor: getRandomColor(),
+              width: '100px',
+              height: '100px',
+            }, children: []
+          });
+        }
+        await App.updateScene();
+      });
+
+      const addTreeNodes = document.querySelector('.addTreeNodes');
+      addTreeNodes.addEventListener('click', async () => {
+        const shapes = [
+          'block',
+          'circle',
+        ];
+        const buildTree = (nodesCount, level) => {
+          if (level <= 0) return [];
+          let res = []
+          const indentX = nodesCount * 2;
+          const w = level * 100;
+          const h = level * 100;
+          for (let i = 0; i < nodesCount; i += 1) {
+            const node = {
+              id: `${level}-${i}`,
+              type: shapes[(Math.floor(Math.random() * 10)) % 2],
+              style: {
+                bgColor: getRandomColor(),
+                width: `${w}px`,
+                height: `${h}px`,
+                transform: `translate(${indentX}px,${indentX}px)`
+              },
+              children: buildTree(nodesCount + 1, level - 1),
+            };
+            res.push(node);
+          }
+          return res;
+        }
+        const nodes = buildTree(1, 6);
+        await App.loadScene();
+        App.addBlock(nodes[0]);
+        await App.updateScene();
+      });
+
+      const clearBtn = document.querySelector('.clear');
+      clearBtn.addEventListener('click', async () => {
+        await App.loadScene();
+        App.setDocuments([]);
+        await App.updateScene();
+      });
+    }
+    console.log(window.App);
+    addShape();
+  </script>
+</body>
+
+</html>
