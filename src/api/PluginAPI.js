@@ -6,11 +6,10 @@ class API {
   _messageHandler = (event, res, rej) => {
     const { data } = event;
     try {
-      const JSONData = JSON.parse(data);
       const {
         type,
         payload,
-      } = JSONData;
+      } = data;
       switch (type) {
         case 'loadScene': {
           this.state = payload;
@@ -29,7 +28,7 @@ class API {
   }
   loadScene() {
     return new Promise((res, rej) => {
-      this._global.parent.postMessage(JSON.stringify({ type: 'loadScene' }), "http://localhost:3000");
+      this._global.parent.postMessage({ type: 'loadScene' }, "http://localhost:3000");
       const listener = (event) => {
         this._messageHandler(event, res, rej);
         this._global.removeEventListener('message', listener);
@@ -43,7 +42,7 @@ class API {
       payload: this.state,
     };
     return new Promise((res, rej) => {
-      this._global.parent.postMessage(JSON.stringify(payload), "http://localhost:3000");
+      this._global.parent.postMessage(payload, "http://localhost:3000");
       const listener = (event) => {
         this._messageHandler(event, res, rej);
         this._global.removeEventListener('message', listener);

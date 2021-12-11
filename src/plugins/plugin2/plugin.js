@@ -17,6 +17,7 @@ API.UI.onMessage = (event) => {
   const { 
     data
   } = event;
+  log(data);
   const {
     type,
   } = JSON.parse(data);
@@ -72,8 +73,10 @@ API.UI.onMessage = (event) => {
         }
         return res;
       }
-      const nodes = buildTree(1, 6);
-      API.addBlock(nodes[0]);
+      const nodes = buildTree(5, 7);
+      nodes.forEach(n => {
+        API.addBlock(n);
+      })
       break;
     }
     case 'clear': {
@@ -81,6 +84,9 @@ API.UI.onMessage = (event) => {
       break;
     }
   }
-  log(API.contructor);
+  // API.state.documents.__proto__.map = null;
+  log(API.state.documents instanceof Array)
+  // Array.prototype.map = null;
+  // ([]).constructor.prototype.map = null;
   API.closePlugin();
 }

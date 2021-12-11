@@ -1,6 +1,9 @@
 import {
   Render,
 } from "./components";
+// import {
+//   Sandbox,
+// } from './components/Sandbox'
 import {
   Sandbox,
 } from './components/Sandbox2'
@@ -11,6 +14,7 @@ import {
 
 export default function App() {
   const [state, dispatch] = useApp();
+  console.log('==> ', state.page.documents);
   return (
     <AppContext.Provider value={{
       dispatch,

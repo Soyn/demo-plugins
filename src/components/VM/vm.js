@@ -1,6 +1,10 @@
+import {
+  useNoOriginIframe,
+} from './useIframe'
 class VM {
   constructor(realm) {
     this._realm = realm;
+    window.test = realm;
     const safeLogWrapper = realm.evaluate(`(log) => {
       return (msg) => {
         log(msg)
@@ -24,8 +28,8 @@ class VM {
           return objCreate(prototype)
         }
       })(),
-      emptyObject: () => { return {} },
-      emptyArray: () => { return [] }
+      emptyObject: () => { return Object.create({}) },
+      emptyArray: () => { return new Array() }
 }))()`;
     const safeCreator = this._realm.evaluate(wrapper);
     this.functionCreator = safeCreator.safeFunctionWrapper;
@@ -84,5 +88,6 @@ export const createVM = () => {
   if (!window.Realm) {
     throw Error('Realms is not loaded');
   }
+  
   return new VM(Realm.makeRootRealm());
 }

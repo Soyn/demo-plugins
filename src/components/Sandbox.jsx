@@ -17,7 +17,7 @@ export const Sandbox = () => {
 
   useEffect(() => {
     window
-      .fetch("http://127.0.0.1:5501/src/plugins/iframe.html")
+      .fetch("http://127.0.0.1:5500/src/plugins/iframe.html")
       .then((res) => res.text())
       .then((data) => {
         const content = `data:text/html;base64,${btoa(data)}`;
@@ -29,8 +29,7 @@ export const Sandbox = () => {
     const listener = (event) => {
       const { data } = event;
       try {
-        const json = JSON.parse(data);
-        const { type, payload } = json;
+        const { type, payload } = data;
         switch (type) {
           case "updateScene": {
             dispatch({
@@ -42,7 +41,7 @@ export const Sandbox = () => {
               payload: appState.page,
             };
             sandboxRef.current.contentWindow.postMessage(
-              JSON.stringify(msg),
+              msg,
               "*"
             );
             break;
@@ -53,7 +52,7 @@ export const Sandbox = () => {
               payload: appState.page,
             };
             sandboxRef.current.contentWindow.postMessage(
-              JSON.stringify(msg),
+             msg,
               "*"
             );
           }

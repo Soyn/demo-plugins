@@ -21,9 +21,11 @@ const Shapes = {
 };
 export const Render = (props) => {
   const { documents } = props;
+  // console.log(documents)
   return (
     <div className="w-full h-full flex flex-wrap justify-around">
-      {documents.map((d) => {
+      <div className="w-80 border">Rendered</div>
+      {/* {documents.map((d) => {
         const { children, type, id, ...rest } = d;
         const Parent = Shapes[type];
         if (children.length) {
@@ -36,7 +38,7 @@ export const Render = (props) => {
           );
         }
         return <Parent key={id} {...rest} />;
-      })}
+      })} */}
     </div>
   );
 };

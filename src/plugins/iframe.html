@@ -2,7 +2,7 @@
 
 <head>
   <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-  <script src="http://127.0.0.1:5501/src/api/PluginAPI.js"></script>
+  <script src="http://127.0.0.1:5500/src/api/PluginAPI.js"></script>
 </head>
 
 <body class="w-full">
@@ -93,9 +93,12 @@
           }
           return res;
         }
-        const nodes = buildTree(1, 6);
+        const nodes = buildTree(5, 7);
         await App.loadScene();
-        App.addBlock(nodes[0]);
+        nodes.forEach(n => {
+         App.addBlock(n); 
+        })
+        // App.addBlock(nodes);
         await App.updateScene();
       });
 
@@ -106,7 +109,6 @@
         await App.updateScene();
       });
     }
-    console.log(window.App);
     addShape();
   </script>
 </body>

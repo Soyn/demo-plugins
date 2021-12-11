@@ -63,29 +63,20 @@ export class API {
     return this._ui;
   }
   addBlock({ style, children }) {
-    this.state.documents.push(this._vm.createObject({
+    this.state.documents.push({
       type: 'block',
       id: nanoid(),
       style,
       children: children,
-    }))
+    })
   }
   addCircle({ style, children }) {
-    this.state.documents.push(this._vm.createObject({
+    this.state.documents.push({
       type: 'circle',
       id: nanoid(),
       style,
       children: children,
-    }))
-  }
-  addText(text = '', style = {}) {
-    this.state.documents.push(this._vm.createObject({
-      type: 'text',
-      id: nanoid(),
-      style,
-      text,
-      children: [],
-    }))
+    })
   }
   setDocuments(docs) {
     this.state.documents = docs;
